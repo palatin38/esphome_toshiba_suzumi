@@ -147,7 +147,7 @@ void ToshibaClimateUart::setup() {
 
   if (this->wifi_led_disabled_) {
     // Disable Wifi LED
-    this->set_wifi_led(false);
+    this->wifi_led_on(false);
   }
 }
 
@@ -572,7 +572,7 @@ void ToshibaClimateUart::scan() {
 /**
  * Change wifi LED status
  */
-void ToshibaClimateUart::set_wifi_led(bool led_on) {
+void ToshibaClimateUart::wifi_led_on(bool led_on) {
   if (led_on) {
     ESP_LOGI(TAG, "LED ON");
     this->sendCmd(ToshibaCommandType::WIFI_LED, 0);
