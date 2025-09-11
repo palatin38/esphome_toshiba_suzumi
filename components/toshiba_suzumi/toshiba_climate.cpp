@@ -147,7 +147,7 @@ void ToshibaClimateUart::setup() {
 
   if (this->wifi_led_disabled_) {
     // Disable Wifi LED
-    this->sendCmd(ToshibaCommandType::WIFI_LED, 128);
+    this->set_wifi_led(false);
   }
 }
 
@@ -569,5 +569,17 @@ void ToshibaClimateUart::scan() {
   }
 }
 
+/**
+ * Change wifi LED status
+ */
+void ToshibaClimateUart::set_wifi_led(bool led_on) {
+  if (led_on) {
+    ESP_LOGI(TAG, "LED ON");
+    this->sendCmd(ToshibaCommandType::WIFI_LED, 0);
+  } else {
+    ESP_LOGI(TAG, "LED OFF");
+    this->sendCmd(ToshibaCommandType::WIFI_LED, 128);
+  }
+}
 }  // namespace toshiba_suzumi
 }  // namespace esphome
