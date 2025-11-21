@@ -24,8 +24,6 @@ external_components:
 ```
 This older version won't be maintained, I'd recommend to upgrade to ESPHome 2025.11.
 
-**Important:** If you use 2025.10.3 or 2025.10.4 without this workaround and the AC unit stops responding (no RX communication), you need to disconnect AC from main power to reset it before you can use this workaround.
-
 ## Supported Toshiba units
 
 Any unit which have an option to purchase a WiFi adapter RB-N105S-G/RB-N106S-G:
