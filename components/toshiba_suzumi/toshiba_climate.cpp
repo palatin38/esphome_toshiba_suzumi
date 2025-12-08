@@ -315,14 +315,12 @@ void ToshibaClimateUart::parseResponse(std::vector<uint8_t> rawData) {
         if (climate_preset.has_value()) {
           // Use standard preset
           this->set_preset_(climate_preset.value());
-          this->set_custom_preset_(nullptr);
         } else {
           // Use custom preset
           this->set_custom_preset_(preset_string);
           this->set_preset_(climate::CLIMATE_PRESET_NONE);
         }
       }
-      this->publish_state();
       break;
     }
     default:
@@ -445,14 +443,12 @@ void ToshibaClimateUart::control(const climate::ClimateCall &call) {
   if (call.get_preset().has_value()) {
     auto preset = *call.get_preset();
     auto preset_string = ClimatePresetToString(preset);
+    ESP_LOGD(TAG, "Setting preset to %s", preset_string);
     auto special_mode = PresetToSpecialMode(preset_string);
     if (special_mode.has_value()) {
-      ESP_LOGD(TAG, "Setting preset to %s", preset_string);
       this->sendCmd(ToshibaCommandType::SPECIAL_MODE, static_cast<uint8_t>(special_mode.value()));
       // Set standard preset
       this->set_preset_(preset);
-      // Reset custom preset
-      this->set_custom_preset_(nullptr);
 
       // Handle special temperature logic for "8 degrees" mode
       if (special_mode.value() != this->special_mode_) {
@@ -475,14 +471,12 @@ void ToshibaClimateUart::control(const climate::ClimateCall &call) {
 
   if (call.has_custom_preset()) {
     const char* custom_preset = call.get_custom_preset();
+    ESP_LOGD(TAG, "Setting custom preset to %s", custom_preset);
     auto special_mode = PresetToSpecialMode(custom_preset);
     if (special_mode.has_value()) {
-      ESP_LOGD(TAG, "Setting custom preset to %s", custom_preset);
       this->sendCmd(ToshibaCommandType::SPECIAL_MODE, static_cast<uint8_t>(special_mode.value()));
       // Set custom preset
       this->set_custom_preset_(custom_preset);
-      // Reset standard preset
-      this->set_preset_(climate::CLIMATE_PRESET_NONE);
 
       // Handle special temperature logic for "8 degrees" mode
       if (special_mode.value() != this->special_mode_) {
